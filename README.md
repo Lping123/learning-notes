@@ -75,6 +75,7 @@ sorted()：返回一个有序列表，可用于任何序列
 * 基本操作：
  
 * 示例：
+
 people = {'Alice': {'phone': '2341','addr': 'Foo drive 23'},
             'Beth': {'phone': '9102','addr': 'Bar street 42'},
             'Cecil': {'phone': '3158','addr': 'Baz avenue 90'}}
@@ -131,7 +132,7 @@ values()：返回一个由字典中的值组成的字典视图
 ## 文件：
 * open()：打开文件并返回一个文件对象
 
-.txt文件
+.txt文件的读取规则
 
 值|描述
 ---|:--:
