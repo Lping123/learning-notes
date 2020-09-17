@@ -1,0 +1,274 @@
+import pandas as pd
+import openpyxl
+import numpy as np
+import pylab as pl
+from pandas import DataFrame, read_excel
+import os
+pl.rcParams['font.sans-serif']=['SimHei']
+path1=r'G:\1.lp\龙钢\测试'
+file_name=os.listdir(path1)
+path_xlsx = []
+path1_xlsx = []
+number_luci = []
+for i in range(len(file_name)):
+    path = file_name[i]
+    number_luci.append(path[0:8])
+    path_xlsx.append(path[0:8]+'.xlsx')
+    path1_xlsx.append(path[0:8] + '(1).xlsx')
+file_xlsx = [os.path.join(path1,x) for x in path_xlsx] #.xlsx文件
+file1_xlsx = [os.path.join(path1,x) for x in path1_xlsx] #(1).xlsx文件
+file_dir=[os.path.join(path1,x) for x in file_name] #csv文件
+print(file_dir)
+print(file_xlsx)
+print(file1_xlsx)
+print(number_luci)
+def str_change(num):
+    try:
+        return float(num)
+    except:
+        return None
+for z in range(len(file_name)):
+    df = pd.read_csv(file_dir[z], encoding='UTF-16')
+    x = np.array(df)
+    alldata = []
+    for j in range(len(x)):
+        a = x[j][0].split()
+        b = list(map(str_change, a))
+        alldata.append(b)
+    data0 = np.array(alldata)
+    data = openpyxl.Workbook()  # 新建工作簿
+    data.create_sheet('1')  # 添加页
+    table1 = data.get_sheet_by_name('1')  # 获得指定名称页
+    ##表1里面的第一个表
+    shih1 = data0[1:, 14]
+    shih2 = data0[1:, 17]
+    shih = shih1 + shih2
+    rows = len(data0[:, 0])
+    columns = len(data0[0, :])
+    sjzO = data0[:, 4].max()  # 计算实际总氧
+    sjzTime = data0[:, 9].max()  # 计算实际总时间
+    for i, j in enumerate(data0[:, 4]):
+        table1.cell(row=i + 3, column=2, value=j)
+    for i, j in enumerate(data0[:, 4]):
+        table1.cell(row=i + 3, column=1, value=int((j / sjzO * 100)))
+    for i, j in enumerate(data0[:, 9]):
+        table1.cell(row=i + 3, column=3, value=round(j / 60, 1))
+    for i, j in enumerate(data0[:, 3]):
+        table1.cell(row=i + 3, column=4, value=round(j * 1000))
+    for i, j in enumerate(data0[:, 6]):
+        table1.cell(row=i + 3, column=5, value=j)
+    for i, j in enumerate(shih):
+        table1.cell(row=i + 3, column=6, value=round(j))
+    for i, j in enumerate(data0[:, 16]):
+        table1.cell(row=i + 3, column=7, value=round(j))
+    for i, j in enumerate(data0[:, 19]):
+        table1.cell(row=i + 3, column=8, value=round(j))
+    for i, j in enumerate(data0[:, 13]):
+        table1.cell(row=i + 3, column=9, value=round(j))
+    for i, j in enumerate(data0[:, 18]):
+        table1.cell(row=i + 3, column=10, value=round(j))
+    for i, j in enumerate(data0[:, 15]):
+        table1.cell(row=i + 3, column=11, value=round(j))
+    table1.cell(1, 1, '实际总氧：')  # 行，列，值 这里是从1开始计数的
+    table1.cell(1, 2, value=sjzO)
+    table1.cell(1, 4, value=sjzTime)
+    table1.cell(1, 3, '实际总时间：')
+    table1.cell(1, 37, '吹氧时间')
+    table1.cell(1, 46, '重量')
+    value = ['吹氧比例', '吹氧量', '吹炼时间', '枪位', '氧压', '石灰', '高镁灰', '污泥球', '矿石', '石灰石', '钢渣粒', '', '吹氧比例', '吹氧量', '吹炼时间', '枪位',
+             '氧压', '石灰', '高镁灰', '污泥球', '矿石', '石灰石', '钢渣粒', '石灰', '高镁灰', '污泥球', '矿石', '石灰石', '钢渣粒', '石灰', '高镁灰', '污泥球',
+             '矿石',
+             '石灰石', '钢渣粒', '', '吹炼时间', '枪位', '氧压', '石灰', '高镁灰', '污泥球', '矿石', '石灰石', '钢渣粒', '石灰', '高镁灰', '污泥球', '矿石',
+             '石灰石',
+             '钢渣粒']
+    index = len(value)
+    for i in range(0, index):
+        table1.cell(2, column=i + 1, value=str(value[i]))
+    for i, j in enumerate(np.arange(0.25, 13, 0.25)):
+        table1.cell(row=i + 3, column=37, value=j)
+
+    data.save(file_xlsx[z])  # 一定要保存
+
+
+    data = openpyxl.Workbook()  # 新建工作簿
+    data.create_sheet('1')  # 添加页
+    table1 = data.get_sheet_by_name('1')  # 获得指定名称页
+    table1.cell(1, 1, '实际总氧：')  # 行，列，值 这里是从1开始计数的
+    table1.cell(1, 3, '实际总时间：')
+    table1.cell(1, 37, '吹氧时间')
+    table1.cell(1, 46, '重量')
+    value = ['吹氧比例', '吹氧量', '吹炼时间', '枪位', '氧压', '石灰', '高镁灰', '污泥球', '矿石', '石灰石', '钢渣粒', '', '吹氧比例', '吹氧量', '吹炼时间', '枪位',
+             '氧压', '石灰', '高镁灰', '污泥球', '矿石', '石灰石', '钢渣粒', '石灰', '高镁灰', '污泥球', '矿石', '石灰石', '钢渣粒', '石灰', '高镁灰', '污泥球',
+             '矿石',
+             '石灰石', '钢渣粒', '', '吹炼时间', '枪位', '氧压', '石灰', '高镁灰', '污泥球', '矿石', '石灰石', '钢渣粒', '石灰', '高镁灰', '污泥球', '矿石',
+             '石灰石',
+             '钢渣粒']
+    index = len(value)
+    for i in range(0, index):
+        table1.cell(2, column=i + 1, value=str(value[i]))
+    ##表1里面的第3个表
+    data1 = DataFrame(read_excel(file_xlsx[z], sheet_name=1))
+    data1_1 = np.array(data1)
+    data1_12 = data1_1[1:, 2]
+    for i, j in enumerate(np.arange(0.25, 13, 0.25)):
+        table1.cell(row=i + 3, column=37, value=j)
+        Time = np.argwhere(data1_12 == i)
+    qiangwei = []
+    yangya = []
+    shihui_1 = []
+    gaomeihui_1 = []
+    wuniqiu_1 = []
+    kuangshi_1 = []
+    value = 0
+    for i in data1_1[1:52, 36]:
+        Time = np.argwhere(data1_12 == i)
+        if len(Time) != 0:
+            value = Time[0]
+            qiangwei.append(int(data1_1[value, 3]))
+            yangya.append(float(data1_1[value, 4]))
+            shihui_1.append(int(data1_1[value, 5]))
+            gaomeihui_1.append(int(data1_1[value, 6]))
+            wuniqiu_1.append(int(data1_1[value, 7]))
+            kuangshi_1.append(int(data1_1[value, 8]))
+            continue
+        end = i + 20
+        while len(Time) == 0 and i < end:
+            i = i + 0.05
+            Time = np.argwhere(data1_12 == i)
+            if len(Time) == 0:
+                continue
+            else:
+                value = Time[0]
+                break
+        qiangwei.append(int(data1_1[value, 3]))
+        yangya.append(float(data1_1[value, 4]))
+        shihui_1.append(int(data1_1[value, 5]))
+        gaomeihui_1.append(int(data1_1[value, 6]))
+        wuniqiu_1.append(int(data1_1[value, 7]))
+        kuangshi_1.append(int(data1_1[value, 8]))
+    shihui_2 = np.array(shihui_1)
+    gaomeihui_2 = np.array(gaomeihui_1)
+    wuniqiu_2 = np.array(wuniqiu_1)
+    kuangshi_2 = np.array(kuangshi_1)
+    for i, j in enumerate(qiangwei):
+        table1.cell(row=i + 3, column=38, value=j)
+    for i, j in enumerate(yangya):
+        table1.cell(row=i + 3, column=39, value=round(j, 2))
+    for i, j in enumerate(shihui_1):
+        table1.cell(row=i + 3, column=40, value=j)
+        if i == 0:
+            table1.cell(row=i + 3, column=46, value=j)
+        else:
+            table1.cell(row=i + 3, column=46, value=shihui_2[i] - shihui_2[i - 1])
+    for i, j in enumerate(gaomeihui_1):
+        table1.cell(row=i + 3, column=41, value=j)
+        if i == 0:
+            table1.cell(row=i + 3, column=47, value=j)
+        else:
+            table1.cell(row=i + 3, column=47, value=gaomeihui_2[i] - gaomeihui_2[i - 1])
+    for i, j in enumerate(wuniqiu_1):
+        table1.cell(row=i + 3, column=42, value=j)
+        if i == 0:
+            table1.cell(row=i + 3, column=48, value=j)
+        else:
+            table1.cell(row=i + 3, column=48, value=wuniqiu_2[i] - wuniqiu_2[i - 1])
+    for i, j in enumerate(kuangshi_1):
+        table1.cell(row=i + 3, column=43, value=j)
+        if i == 0:
+            table1.cell(row=i + 3, column=49, value=j)
+        else:
+            table1.cell(row=i + 3, column=49, value=kuangshi_2[i] - kuangshi_2[i - 1])
+    data.save(file1_xlsx[z])  # 一定要保存
+    ##汇总炉次号
+    a = 'G:/1.lp/龙钢/测试/'
+    path_txt = a + '汇总炉次号' + '.txt'
+    x = number_luci[z] + '\n'
+    f1 = open(path_txt, 'a')
+    f1.write(x)
+
+#经数据处理后，关于枪位、氧步、料步数据的汇总表
+num = input("炉次总数：")
+print(num)
+path_txt = 'G:/1.lp/龙钢/测试/' + '汇总炉次号' + '.txt'
+file = open(path_txt,'r',encoding = 'UTF-8')
+luci = file.read()
+number_luci = []
+number_luci.append(luci.split('\n'))
+print(number_luci)
+number_luci2 = [number_luci[0][i] for i in range(int(num))]#len(file_name)=num
+#print(number_luci2)
+data = openpyxl.Workbook() # 新建工作簿
+data.create_sheet('枪位') # 添加页
+data.create_sheet('氧压') # 添加页
+data.create_sheet('石灰') # 添加页
+data.create_sheet('高镁灰') # 添加页
+data.create_sheet('污泥球') # 添加页
+data.create_sheet('矿石') # 添加页
+##创建汇总表的表头、表名
+table1 = data.get_sheet_by_name('枪位')  # 获得指定名称页
+table1.cell(1, 1, '吹炼时间')
+for i, j in enumerate(number_luci2):
+    table1.cell(row=1, column=i+2, value=j)
+for i, j in enumerate(np.arange(0.25, 13, 0.25)):
+    table1.cell(row=i + 2, column= 1, value= j)
+table2 = data.get_sheet_by_name('氧压')  # 获得指定名称页
+table2.cell(1, 1, '吹炼时间')
+for i, j in enumerate(number_luci2):
+    table2.cell(row=1, column=i+2, value=j)
+for i, j in enumerate(np.arange(0.25, 13, 0.25)):
+    table2.cell(row=i + 2, column= 1, value= j)
+table3 = data.get_sheet_by_name('石灰')  # 获得指定名称页
+table3.cell(1, 1, '吹炼时间')
+for i, j in enumerate(number_luci2):
+    table3.cell(row=1, column=i+2, value=j)
+for i, j in enumerate(np.arange(0.25, 13, 0.25)):
+    table3.cell(row=i + 2, column= 1, value= j)
+table4 = data.get_sheet_by_name('高镁灰')  # 获得指定名称页
+table4.cell(1, 1, '吹炼时间')
+for i, j in enumerate(number_luci2):
+    table4.cell(row=1, column=i+2, value=j)
+for i, j in enumerate(np.arange(0.25, 13, 0.25)):
+    table4.cell(row=i + 2, column= 1, value= j)
+table5 = data.get_sheet_by_name('污泥球')  # 获得指定名称页
+table5.cell(1, 1, '吹炼时间')
+for i, j in enumerate(number_luci2):
+    table5.cell(row=1, column=i+2, value=j)
+for i, j in enumerate(np.arange(0.25, 13, 0.25)):
+    table5.cell(row=i + 2, column= 1, value= j)
+table6 = data.get_sheet_by_name('矿石')  # 获得指定名称页
+table6.cell(1, 1, '吹炼时间')
+for i, j in enumerate(number_luci2):
+    table6.cell(row=1, column=i+2, value=j)
+for i, j in enumerate(np.arange(0.25, 13, 0.25)):
+    table6.cell(row=i + 2, column= 1, value= j)
+
+##读取每个炉次号对应表格的数据并汇总
+a = 'G:/1.lp/龙钢/测试/'
+b = '(1).xlsx'
+d = '.xlsx'
+c = '汇总'
+path_total = a + c +d
+qiangwei = []
+yangya = []
+shihui = []
+gaomeihui = []
+wuniqiu = []
+kuangshi = []
+for i in range(0,len(number_luci2)):  #len(file_name)
+    data1 = DataFrame(read_excel(file1_xlsx[i],sheet_name = 1))
+    data1 = np.array(data1)
+    qiangwei.append(data1[1:51,37].tolist())
+    yangya.append(data1[1:51,38].tolist())
+    shihui.append(data1[1:51,45].tolist())
+    gaomeihui.append(data1[1:51,46].tolist())
+    wuniqiu.append(data1[1:51,47].tolist())
+    kuangshi.append(data1[1:51,48].tolist())
+    for j in range(0, len(qiangwei[0])):
+        table1.cell(row=j + 2, column=i + 2, value=int(np.array(qiangwei)[i,j]))
+        table2.cell(row=j + 2, column=i + 2, value=np.array(yangya)[i,j])
+        table3.cell(row=j + 2, column=i + 2, value=int(np.array(shihui)[i, j]))
+        table4.cell(row=j + 2, column=i + 2, value=int(np.array(gaomeihui)[i, j]))
+        table5.cell(row=j + 2, column=i + 2, value=int(np.array(wuniqiu)[i, j]))
+        table6.cell(row=j + 2, column=i + 2, value=int(np.array(kuangshi)[i, j]))
+
+data.save(path_total)
